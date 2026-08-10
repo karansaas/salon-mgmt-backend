@@ -5,7 +5,7 @@ import { env } from '../config/env.js';
 
 // The deployed API and frontend are hosted on different origins. Production
 // cookies therefore require SameSite=None and HTTPS to be sent with API calls.
-const cookieSettings = { httpOnly: true, sameSite: env.nodeEnv === 'production' ? 'none' as const : 'strict' as const, secure: env.nodeEnv === 'production' };
+const cookieSettings = { httpOnly: true, sameSite: env.cookieSameSite, secure: env.cookieSecure };
 const cookieOptions = { ...cookieSettings, maxAge: 24 * 60 * 60 * 1000 };
 
 export const login = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
