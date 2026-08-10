@@ -10,6 +10,7 @@ import { clientRouter } from './routes/client.routes.js';
 import { serviceRouter } from './routes/service.routes.js';
 import { productRouter } from './routes/product.routes.js';
 import { employeeRouter } from './routes/employee.routes.js';
+import { billRouter } from './routes/bill.routes.js';
 
 export const app = express();
 app.use(helmet());
@@ -23,5 +24,6 @@ app.use('/api/clients', clientRouter);
 app.use('/api/services', serviceRouter);
 app.use('/api/products', productRouter);
 app.use('/api/employees', employeeRouter);
+app.use('/api/bills', billRouter);
 app.use(notFound);
 app.use(errorHandler);

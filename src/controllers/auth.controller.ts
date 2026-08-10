@@ -3,7 +3,10 @@ import { loginUser, publicUser } from '../services/auth.service.js';
 import { AppError } from '../utils/AppError.js';
 import { env } from '../config/env.js';
 
-const cookieOptions = { httpOnly: true, sameSite: 'strict' as const, secure: env.nodeEnv === 'production', maxAge: 24 * 60 * 60 * 1000 };
+// The deployed API and frontend are hosted on different origins. Production
+// cookies therefore require SameSite=None and HTTPS to be sent with API calls.
+const cookieSettings = { httpOnly: true, sameSite: env.nodeEnv === 'production' ? 'none' as const : 'strict' as const, secure: env.nodeEnv === 'production' };
+const cookieOptions = { ...cookieSettings, maxAge: 24 * 60 * 60 * 1000 };
 
 export const login = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
@@ -15,7 +18,7 @@ export const login = async (req: Request, res: Response, next: NextFunction): Pr
   } catch (error) { next(error); }
 };
 
-export const logout = (_req: Request, res: Response): void => { res.clearCookie('salon_token', { httpOnly: true, sameSite: 'strict', secure: env.nodeEnv === 'production' }).status(204).send(); };
+export const logout = (_req: Request, res: Response): void => { res.clearCookie('salon_token', cookieSettings).status(204).send(); };
 
 export const me = (req: Request, res: Response): void => {
   if (!req.user) throw new AppError(401, 'Authentication required');

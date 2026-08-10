@@ -13,6 +13,8 @@ export interface IClient {
   notes?: string;
   preferredEmployee?: Types.ObjectId;
   isActive: boolean;
+  lastVisitAt?: Date;
+  totalVisits: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -30,6 +32,8 @@ const clientSchema = new Schema<IClient>({
   notes: { type: String, trim: true, maxlength: 2000 },
   preferredEmployee: { type: Schema.Types.ObjectId, ref: 'User' },
   isActive: { type: Boolean, default: true },
+  lastVisitAt: { type: Date },
+  totalVisits: { type: Number, default: 0 },
 }, { timestamps: true });
 
 export const Client = model<IClient>('Client', clientSchema);

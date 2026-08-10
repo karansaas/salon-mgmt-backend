@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { Types } from 'mongoose';
 import { ClientGender } from '../models/Client.js';
-import { ClientInput, createClient, deactivateClient, getClient, listClients, toClientResponse, updateClient } from '../services/client.service.js';
+import { ClientInput, createClient, deactivateClient, getClient, getClientBills, listClients, toClientResponse, updateClient } from '../services/client.service.js';
 import { AppError } from '../utils/AppError.js';
 
 const allowedSortFields = ['firstName', 'lastName', 'mobileNumber', 'createdAt', 'updatedAt'] as const;
@@ -84,6 +84,10 @@ export const getClientHistory = async (req: Request, res: Response, next: NextFu
       preferredEmployee: client.preferredEmployee ? client.preferredEmployee.toString() : null,
     });
   } catch (error) { next(error); }
+};
+
+export const getClientBillingHistory = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try { const page = Math.max(1, Number.parseInt(req.query.page as string, 10) || 1); const limit = Math.min(100, Math.max(1, Number.parseInt(req.query.limit as string, 10) || 10)); const parseDate = (value: unknown) => { if (!value) return undefined; const date = new Date(value as string); if (Number.isNaN(date.getTime())) throw new AppError(400, 'Invalid date filter'); return date; }; res.json(await getClientBills(routeId(req.params.id), page, limit, parseDate(req.query.from), parseDate(req.query.to))); } catch (error) { next(error); }
 };
 
 export const postClient = async (req: Request, res: Response, next: NextFunction): Promise<void> => {

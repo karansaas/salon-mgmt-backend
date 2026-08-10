@@ -16,7 +16,7 @@ export const errorHandler: ErrorRequestHandler = (error, _req, res, _next) => {
   const message = error instanceof AppError
     ? error.message
     : duplicate
-      ? error.keyPattern?.mobileNumber ? 'A record with this mobile number already exists' : error.keyPattern?.sku ? 'A product with this SKU already exists' : error.keyPattern?.name ? 'A record with this name already exists' : 'A record with this value already exists'
+      ? error.keyPattern?.invoiceNumber ? 'A duplicate invoice number was generated; please retry' : error.keyPattern?.mobileNumber ? 'A record with this mobile number already exists' : error.keyPattern?.sku ? 'A product with this SKU already exists' : error.keyPattern?.name ? 'A record with this name already exists' : 'A record with this value already exists'
       : validation || cast ? 'Invalid request data' : 'Internal server error';
   if (status === 500) console.error(error);
   res.status(status).json({ message, ...(env.nodeEnv === 'development' && status === 500 ? { stack: error.stack } : {}) });
