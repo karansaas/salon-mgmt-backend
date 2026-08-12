@@ -1,0 +1,1 @@
+import { Router } from 'express'; import { overview } from '../controllers/insight.controller.js'; import { requireAuth } from '../middleware/auth.middleware.js'; export const insightRouter = Router(); insightRouter.use(requireAuth); insightRouter.get('/overview', overview);
