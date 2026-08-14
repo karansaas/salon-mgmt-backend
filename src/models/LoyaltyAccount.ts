@@ -1,0 +1,3 @@
+import { Schema, Types, model } from 'mongoose';
+export interface ILoyaltyAccount { client: Types.ObjectId; pointsBalance: number; lifetimeEarned: number; lifetimeRedeemed: number; isActive: boolean; createdAt: Date; updatedAt: Date; }
+const schema = new Schema<ILoyaltyAccount>({ client: { type: Schema.Types.ObjectId, ref: 'Client', required: true, unique: true, index: true }, pointsBalance: { type: Number, default: 0, min: 0 }, lifetimeEarned: { type: Number, default: 0, min: 0 }, lifetimeRedeemed: { type: Number, default: 0, min: 0 }, isActive: { type: Boolean, default: true } }, { timestamps: true }); export const LoyaltyAccount = model<ILoyaltyAccount>('LoyaltyAccount', schema);
