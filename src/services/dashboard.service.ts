@@ -4,6 +4,7 @@ import { DateRange, indiaDateLabels, resolveIndiaDateRange } from '../utils/date
 
 const asDateMatch = (range: DateRange) => ({ createdAt: { $gte: range.from, $lt: range.to } });
 const number = (value: unknown) => Number(value ?? 0);
+const employeeDisplayName = (value: unknown) => String(value ?? '').split(/\s+/).filter((part) => part && part.toLowerCase() !== 'undefined').join(' ');
 
 export const getDashboardOverview = async (from?: string, to?: string) => {
   const selectedRange = resolveIndiaDateRange(from, to);
@@ -43,7 +44,7 @@ export const getDashboardOverview = async (from?: string, to?: string) => {
     revenueSummary: { revenue: number(selected.revenue), bills: number(selected.bills), averageBillValue: number(selected.averageBillValue) },
     revenueTrend: indiaDateLabels(selectedRange).map((label) => trendByDate.get(label) ?? { date: label, revenue: 0, bills: 0 }),
     paymentMethods: ['CASH', 'UPI', 'CARD', 'MIXED'].map((method) => { const amount = paymentByMethod.get(method) ?? 0; return { method, amount, percentage: totalCollected ? Math.round((amount / totalCollected) * 10000) / 100 : 0 }; }),
-    topServices: data.topServices ?? [], topProducts: data.topProducts ?? [], employeePerformance: data.employees ?? [], recentBills: data.recentBills ?? [],
+    topServices: data.topServices ?? [], topProducts: data.topProducts ?? [], employeePerformance: (data.employees ?? []).map((employee: { name?: unknown }) => ({ ...employee, name: employeeDisplayName(employee.name) })), recentBills: data.recentBills ?? [],
     lowStock: { count: await Product.countDocuments({ isActive: true, $expr: { $lte: ['$currentStock', '$minimumStockLevel'] } }), products: lowStock.map((product) => ({ id: product.id, name: product.name, currentStock: product.currentStock, minimumStockLevel: product.minimumStockLevel })) },
   };
 };
