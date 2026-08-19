@@ -15,6 +15,7 @@ import { dashboardRouter } from './routes/dashboard.routes.js';
 import { reportRouter } from './routes/report.routes.js';
 import { insightRouter } from './routes/insight.routes.js';
 import { actionCenterRouter } from './routes/actionCenter.routes.js';
+import { loyaltyRouter } from './routes/loyalty.routes.js';
 
 export const app = express();
 app.use(helmet());
@@ -33,5 +34,6 @@ app.use('/api/dashboard', dashboardRouter);
 app.use('/api/reports', reportRouter);
 app.use('/api/insights', insightRouter);
 app.use('/api/action-center', actionCenterRouter);
+app.use('/api/loyalty', loyaltyRouter);
 app.use(notFound);
 app.use(errorHandler);
