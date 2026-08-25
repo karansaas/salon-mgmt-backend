@@ -1,7 +1,7 @@
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import express from 'express';
-import helmet from 'helmet';
+import { createRequire } from 'node:module';
 import morgan from 'morgan';
 import { env } from './config/env.js';
 import { errorHandler, notFound } from './middleware/error.middleware.js';
@@ -16,6 +16,9 @@ import { reportRouter } from './routes/report.routes.js';
 import { insightRouter } from './routes/insight.routes.js';
 import { actionCenterRouter } from './routes/actionCenter.routes.js';
 import { loyaltyRouter } from './routes/loyalty.routes.js';
+
+const require = createRequire(import.meta.url);
+const helmet = require('helmet') as typeof import('helmet').default;
 
 export const app = express();
 app.use(helmet());
