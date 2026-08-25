@@ -4,6 +4,7 @@ import express from 'express';
 import { createRequire } from 'node:module';
 import morgan from 'morgan';
 import { env } from './config/env.js';
+import { connectDatabase } from './config/database.js';
 import { errorHandler, notFound } from './middleware/error.middleware.js';
 import { authRouter } from './routes/auth.routes.js';
 import { clientRouter } from './routes/client.routes.js';
@@ -26,6 +27,14 @@ app.use(cors({ origin: env.clientUrl, credentials: true }));
 app.use(cookieParser());
 app.use(express.json({ limit: '10kb' }));
 app.use(morgan(env.nodeEnv === 'production' ? 'combined' : 'dev'));
+app.use(async (_req, _res, next) => {
+  try {
+    await connectDatabase();
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
 app.get('/api/health', (_req, res) => res.json({ status: 'ok' }));
 app.use('/api/auth', authRouter);
 app.use('/api/clients', clientRouter);
@@ -40,3 +49,5 @@ app.use('/api/action-center', actionCenterRouter);
 app.use('/api/loyalty', loyaltyRouter);
 app.use(notFound);
 app.use(errorHandler);
+
+export default app;
