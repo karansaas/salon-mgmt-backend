@@ -2,7 +2,7 @@ import { FilterQuery, Types } from 'mongoose';
 import { Service, ServiceDocument, IService } from '../models/Service.js';
 import { AppError } from '../utils/AppError.js';
 
-export type ServiceInput = Pick<IService, 'name' | 'category' | 'duration' | 'price'> & Partial<Pick<IService, 'description' | 'isActive'>>;
+export type ServiceInput = Pick<IService, 'name' | 'category' | 'price'> & Partial<Pick<IService, 'duration' | 'description' | 'isActive'>>;
 export type ServiceListOptions = { page: number; limit: number; search?: string; category?: string; status: 'active' | 'inactive' | 'all'; sortBy: 'name' | 'category' | 'duration' | 'price' | 'createdAt' | 'updatedAt'; sortOrder: 'asc' | 'desc'; };
 
 export const toServiceResponse = (service: ServiceDocument) => ({ id: service.id, name: service.name, category: service.category, description: service.description, duration: service.duration, price: service.price, isActive: service.isActive, createdAt: service.createdAt, updatedAt: service.updatedAt });

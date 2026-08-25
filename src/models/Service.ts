@@ -8,7 +8,7 @@ const serviceSchema = new Schema<IService>({
   name: { type: String, required: true, unique: true, trim: true, maxlength: 150 },
   category: { type: String, required: true, enum: ['Haircut', 'Hair Color', 'Hair Treatment', 'Facial', 'Makeup', 'Waxing', 'Threading', 'Manicure', 'Pedicure', 'Spa', 'Massage', 'Other'] },
   description: { type: String, trim: true, maxlength: 2000 },
-  duration: { type: Number, required: true, min: 1 },
+  duration: { type: Number, default: 0, min: 0 },
   price: { type: Number, required: true, min: 0.01 },
   isActive: { type: Boolean, default: true },
 }, { timestamps: true });
