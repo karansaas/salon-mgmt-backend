@@ -4,7 +4,7 @@ const datePattern = /^\d{4}-\d{2}-\d{2}$/;
 
 export type DateRange = { from: Date; to: Date; fromDate: string; toDate: string; };
 
-const indiaDate = (date: Date): string => {
+export const indiaDate = (date: Date): string => {
   const parts = new Intl.DateTimeFormat('en-GB', { timeZone: INDIA_TIME_ZONE, year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(date);
   const value = (type: Intl.DateTimeFormatPartTypes) => parts.find((part) => part.type === type)?.value ?? '';
   return `${value('year')}-${value('month')}-${value('day')}`;

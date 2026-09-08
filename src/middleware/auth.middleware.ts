@@ -29,3 +29,9 @@ export const requireNonEmployee = (req: Request, _res: Response, next: NextFunct
   if (req.user.role === 'Employee') return next(new AppError(403, 'You do not have permission to access this resource'));
   next();
 };
+
+export const requireEmployee = (req: Request, _res: Response, next: NextFunction): void => {
+  if (!req.user) return next(new AppError(401, 'Authentication required'));
+  if (req.user.role !== 'Employee' || !req.user.employee) return next(new AppError(403, 'Employee access is required'));
+  next();
+};
