@@ -1,9 +1,11 @@
 import { Router } from 'express';
-import { deleteService, getServiceById, getServices, postService, putService } from '../controllers/service.controller.js';
-import { requireAuth } from '../middleware/auth.middleware.js';
+import { deleteService, getServiceById, getServicePerformanceById, getServices, postService, putService } from '../controllers/service.controller.js';
+import { requireAuth, requireNonEmployee } from '../middleware/auth.middleware.js';
 export const serviceRouter = Router();
 serviceRouter.use(requireAuth);
 serviceRouter.get('/', getServices);
+serviceRouter.use(requireNonEmployee);
+serviceRouter.get('/:id/performance', getServicePerformanceById);
 serviceRouter.get('/:id', getServiceById);
 serviceRouter.post('/', postService);
 serviceRouter.put('/:id', putService);

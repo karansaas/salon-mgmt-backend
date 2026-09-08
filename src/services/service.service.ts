@@ -1,5 +1,6 @@
 import { FilterQuery, Types } from 'mongoose';
 import { Service, ServiceDocument, IService } from '../models/Service.js';
+import { Bill } from '../models/Bill.js';
 import { AppError } from '../utils/AppError.js';
 
 export type ServiceInput = Pick<IService, 'name' | 'category' | 'price'> & Partial<Pick<IService, 'duration' | 'description' | 'isActive'>>;
@@ -17,6 +18,14 @@ export const listServices = async ({ page, limit, search, category, status, sort
 };
 
 export const getService = async (id: string): Promise<ServiceDocument> => { validateId(id); const service = await Service.findById(id); if (!service) throw new AppError(404, 'Service not found'); return service; };
+export const getServicePerformance = async (id: string) => {
+  validateId(id);
+  const service = await Service.exists({ _id: id });
+  if (!service) throw new AppError(404, 'Service not found');
+
+  const [performance] = await Bill.aggregate([{ $match: { 'services.serviceId': new Types.ObjectId(id) } }, { $unwind: '$services' }, { $match: { 'services.serviceId': new Types.ObjectId(id) } }, { $group: { _id: null, timesUsed: { $sum: '$services.quantity' }, revenueGenerated: { $sum: '$services.total' }, employees: { $addToSet: '$services.employeeId' } } }, { $project: { _id: 0, timesUsed: 1, revenueGenerated: 1, employeesProvidingService: { $size: '$employees' } } }]);
+  return performance ?? { timesUsed: 0, revenueGenerated: 0, employeesProvidingService: 0 };
+};
 export const createService = async (input: ServiceInput): Promise<ServiceDocument> => Service.create(input);
 export const updateService = async (id: string, input: Partial<ServiceInput>): Promise<ServiceDocument> => { validateId(id); const service = await Service.findByIdAndUpdate(id, input, { new: true, runValidators: true }); if (!service) throw new AppError(404, 'Service not found'); return service; };
 export const deactivateService = async (id: string): Promise<void> => { validateId(id); const service = await Service.findByIdAndUpdate(id, { isActive: false }, { new: true }); if (!service) throw new AppError(404, 'Service not found'); };

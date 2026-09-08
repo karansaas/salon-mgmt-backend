@@ -3,7 +3,7 @@ import { AppError } from '../utils/AppError.js';
 import { signToken } from '../utils/jwt.js';
 
 export const publicUser = (user: UserDocument) => ({
-  id: user.id, name: user.name, email: user.email, role: user.role, isActive: user.isActive,
+  id: user.id, name: user.name, email: user.email, role: user.role, employeeId: user.employee?.toString(), isActive: user.isActive,
 });
 
 export const loginUser = async (email: string, password: string) => {
