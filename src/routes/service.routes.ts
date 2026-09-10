@@ -4,9 +4,8 @@ import { requireAuth, requireNonEmployee } from '../middleware/auth.middleware.j
 export const serviceRouter = Router();
 serviceRouter.use(requireAuth);
 serviceRouter.get('/', getServices);
-serviceRouter.use(requireNonEmployee);
-serviceRouter.get('/:id/performance', getServicePerformanceById);
+serviceRouter.get('/:id/performance', requireNonEmployee, getServicePerformanceById);
 serviceRouter.get('/:id', getServiceById);
 serviceRouter.post('/', postService);
 serviceRouter.put('/:id', putService);
-serviceRouter.delete('/:id', deleteService);
+serviceRouter.delete('/:id', requireNonEmployee, deleteService);
