@@ -3,6 +3,7 @@ import { deleteService, getServiceById, getServicePerformanceById, getServices, 
 import { requireAuth, requireNonEmployee } from '../middleware/auth.middleware.js';
 export const serviceRouter = Router();
 serviceRouter.use(requireAuth);
+serviceRouter.use(requireNonEmployee);
 serviceRouter.get('/', getServices);
 serviceRouter.get('/:id/performance', requireNonEmployee, getServicePerformanceById);
 serviceRouter.get('/:id', getServiceById);

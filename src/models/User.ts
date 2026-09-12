@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import { HydratedDocument, Model, Schema, Types, model } from 'mongoose';
 
-export type UserRole = 'Admin' | 'Staff' | 'Employee';
+export type UserRole = 'Admin' | 'Staff' | 'Receptionist' | 'Employee';
 
 export interface IUser {
   name: string;
@@ -22,7 +22,7 @@ const userSchema = new Schema<IUser, UserModel, UserMethods>({
   name: { type: String, required: true, trim: true, maxlength: 100 },
   email: { type: String, required: true, unique: true, trim: true, lowercase: true },
   password: { type: String, required: true, minlength: 8, select: false },
-  role: { type: String, enum: ['Admin', 'Staff', 'Employee'], default: 'Staff' },
+  role: { type: String, enum: ['Admin', 'Staff', 'Receptionist', 'Employee'], default: 'Staff' },
   employee: { type: Schema.Types.ObjectId, ref: 'Employee', unique: true, sparse: true },
   isActive: { type: Boolean, default: true },
 }, { timestamps: true });

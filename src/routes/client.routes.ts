@@ -5,6 +5,7 @@ import { getClientLoyalty, postAdjustment } from '../controllers/loyalty.control
 
 export const clientRouter = Router();
 clientRouter.use(requireAuth);
+clientRouter.use(requireNonEmployee);
 clientRouter.get('/', getClients);
 clientRouter.get('/:id/history', getClientHistory);
 clientRouter.get('/:id/bills', getClientBillingHistory);
@@ -12,6 +13,5 @@ clientRouter.get('/:clientId/loyalty', getClientLoyalty);
 clientRouter.post('/:clientId/loyalty/adjustments', postAdjustment);
 clientRouter.get('/:id', getClientById);
 clientRouter.post('/', postClient);
-clientRouter.use(requireNonEmployee);
 clientRouter.put('/:id', putClient);
 clientRouter.delete('/:id', deleteClient);
